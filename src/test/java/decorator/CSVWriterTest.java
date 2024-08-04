@@ -110,10 +110,11 @@ class CSVWriterTest {
 	@Test
 	void shouldWriteAnArrayOfTokensWithSeparatorBetween() {
 		String expected = "Ameixa;Banana;Maça;Batata Doce;Pera;Uva";
-		String[] tokens = expected.split(Separator.SEMICOLON.asString());
-
+		Separator separator = Separator.SEMICOLON;
+		
+		String[] tokens = expected.split(new String("\\" + separator.asString()));
 		assertDoesNotThrow(() -> {
-			csvWriter.setSeparator(Separator.SEMICOLON);
+			csvWriter.setSeparator(separator);
 			csvWriter.writeTokens(tokens);
 			csvWriter.flush();
 		});
@@ -127,12 +128,13 @@ class CSVWriterTest {
 		String expected = "Ameixa|Banana|Maça|Laranja Lima|Pera|Uva\n" + 
 	                      "Pêssego|Maracuja|Fruta do Conde|Graviola\n" +
 				          "Acerola|Limão Rosa|Manga\n";
-
-		csvWriter.setSeparator(Separator.PIPE);
+		Separator separator = Separator.PIPE;
+		
+		csvWriter.setSeparator(separator);
 		assertDoesNotThrow(() -> {
 			String[] lines = expected.split("\n");
 			for (String line : lines) {
-				String[] tokens = line.split("\\|");
+				String[] tokens = line.split(new String("\\" + separator.asString()));
 				csvWriter.writeLine(tokens);
 			}
 			csvWriter.flush();

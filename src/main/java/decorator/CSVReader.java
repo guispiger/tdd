@@ -13,11 +13,8 @@ public class CSVReader extends Reader {
 	public CSVReader(Reader reader) {
 		super(reader);
 
-		if (reader instanceof Reader) {
-			this.bufferedReader = (BufferedReader) reader;
-		} else {
-			this.bufferedReader = new BufferedReader(reader);
-		}
+		this.bufferedReader = new BufferedReader(reader);
+
 	}
 
 	@Override
@@ -32,21 +29,25 @@ public class CSVReader extends Reader {
 
 	public List<String[]> readAllLines() throws IOException {
 		List<String[]> data = new ArrayList<>();
-		String[] line = null;
+		String[] line = this.readLine();
 
-		while((line = this.readLine()) != null) {
+		while (line != null) {
 			data.add(line);
+			line = this.readLine();
 		}
-		
+
 		return data;
 	}
 
 	public String[] readLine() throws IOException {
 		String line = null;
-	
+		String[] lineTokens = null;
+
 		line = this.bufferedReader.readLine();
-			
-		return line.split(separator.asString());
+		if (line != null) {
+			lineTokens = line.split(new String("\\" + getSeparator().asString()));
+		}
+		return lineTokens;
 	}
 
 	public Separator getSeparator() {
