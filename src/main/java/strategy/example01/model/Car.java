@@ -1,6 +1,6 @@
 package strategy.example01.model;
 
-public class Car
+public class Car implements Comparable<Car>
 {
 	private String licence;
 	private String name;
@@ -107,5 +107,18 @@ public class Car
 		sb.append("}");
 		
 		return sb.toString();
+	}
+	
+	@Override
+	public int compareTo(Car car) {
+//		if(this.year == car.year) {
+//			return 0;
+//		}
+//		if(this.year > car.year) {
+//			return 1;
+//		}
+//		return -1;
+		
+		return this.year - car.year;
 	}
 }
