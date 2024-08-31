@@ -2,10 +2,15 @@ package motor;
 
 public interface MotorState extends Cloneable
 {
-	public enum Status { ON , OFF };
-	public Status currentStatus();
-	public float rotationsPerMinute();
-	public float accelerationFraction();
+	static enum Status { ON , OFF };
+	
+	Status currentStatus();
+	float rotationsPerMinute();
+	float accelerationFraction();
+	
+	void setCurrentStatus(Status newValue);
+	void setRotationsPerMinute(float newValue);
+	void setAccelerationFraction(float newValue);
 	
 	public MotorState clone();
 	

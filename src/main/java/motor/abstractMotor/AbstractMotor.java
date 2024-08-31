@@ -5,10 +5,10 @@ import motor.MotorState;
 
 public abstract class AbstractMotor implements Motor
 {
-    protected SimpleMotorState state = null;
+    protected MotorState state = null;
 	
 	//----------------------------------------------------
-	protected AbstractMotor(SimpleMotorState state)
+	protected AbstractMotor(MotorState state)
 	{
 		this.state = state;
 	}
@@ -35,18 +35,18 @@ public abstract class AbstractMotor implements Motor
 	@Override
 	public void start()
 	{
-		state.currentStatus = MotorState.Status.ON;
-		state.accelerationFraction = 0.1f;
-		state.rpm = determineRotationsPerMinute();
+		state.setCurrentStatus(MotorState.Status.ON);
+		state.setAccelerationFraction(0.1f);
+		state.setRotationsPerMinute(determineRotationsPerMinute());
 	}
 
 	//----------------------------------------------------
 	@Override
 	public void stop()
 	{
-		this.state.currentStatus = MotorState.Status.OFF;
-		this.state.accelerationFraction = 0.0f;
-		state.rpm = 0.0f;
+		this.state.setCurrentStatus(MotorState.Status.OFF);
+		this.state.setAccelerationFraction( 0.0f);
+		this.state.setRotationsPerMinute( 0.0f);
 	}
 	
 	
@@ -63,10 +63,10 @@ public abstract class AbstractMotor implements Motor
 			return;
 		}
 		
-		float increment = (1-state.accelerationFraction) * percent;
-		state.accelerationFraction += increment;
+		float increment = (1-state.accelerationFraction()) * percent;
+		state.setAccelerationFraction(state.accelerationFraction()+ increment);
 		
-		state.rpm = determineRotationsPerMinute();
+		state.setRotationsPerMinute(determineRotationsPerMinute());
 	}
 	
 	//----------------------------------------------------
@@ -82,25 +82,25 @@ public abstract class AbstractMotor implements Motor
 			return;
 		}
 		
-		float base = (float)Math.pow((Math.exp(-state.accelerationFraction)/2.72),2);
-		float decrement = (state.accelerationFraction) *(base) * percent;
-		state.accelerationFraction -= decrement;
+		float base = (float)Math.pow((Math.exp(-state.accelerationFraction())/2.72),2);
+		float decrement = (state.accelerationFraction()) *(base) * percent;
+		state.setAccelerationFraction(state.accelerationFraction()-decrement);
 	
-		state.rpm = determineRotationsPerMinute();
+		state.setRotationsPerMinute(determineRotationsPerMinute());
 	}
 	
 	//----------------------------------------------------
 	@Override
 	public boolean isOn()
 	{
-		return state.currentStatus == MotorState.Status.ON;
+		return state.currentStatus() == MotorState.Status.ON;
 	}
 
 	//----------------------------------------------------
 	@Override
 	public boolean isOff()
 	{
-		return state.currentStatus == MotorState.Status.OFF;
+		return state.currentStatus() == MotorState.Status.OFF;
 	}
 	
 	//----------------------------------------------------
